@@ -127,3 +127,10 @@ config/production.json
 # Lock files (optional - uncomment if you want to ignore them)
 # package-lock.json
 # yarn.lock
+
+# Unnecessary documentation files
+API_DOCUMENTATION.md
+SETUP_INSTRUCTIONS.md
+verify-email.html
+test-server.js
+start-server.bat
