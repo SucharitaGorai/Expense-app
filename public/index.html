@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Authentication System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-card">
+            <h2>Welcome to Dashboard</h2>
+            <div id="userInfo">
+                <p>Loading user information...</p>
+            </div>
+            <div id="protectedData" style="margin-top: 20px;">
+                <button id="fetchProtectedBtn" class="btn">Fetch Protected Data</button>
+                <div id="protectedResult" style="margin-top: 15px;"></div>
+            </div>
+            <div style="margin-top: 30px;">
+                <button id="logoutBtn" class="btn" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);">Logout</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            const userInfo = document.getElementById('userInfo');
+            const protectedResult = document.getElementById('protectedResult');
+            const fetchBtn = document.getElementById('fetchProtectedBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            userInfo.innerHTML = `
+                <h3>Hello, ${user.name}!</h3>
+                <p>Email: ${user.email}</p>
+                <p>User ID: ${user.id}</p>
+            `;
+            
+            fetchBtn.addEventListener('click', async function() {
+                try {
+                    const response = await fetch('/api/protected', {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        protectedResult.innerHTML = `
+                            <div class="message success">
+                                <h4>Protected Data Received!</h4>
+                                <p>${result.message}</p>
+                                <small>User from token: ${result.user.email}</small>
+                            </div>
+                        `;
+                    } else {
+                        protectedResult.innerHTML = `
+                            <div class="message error">
+                                ${result.message}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error('Error fetching protected data:', error);
+                    protectedResult.innerHTML = `
+                        <div class="message error">
+                            Network error. Please try again.
+                        </div>
+                    `;
+                }
+            });
+            
+            logoutBtn.addEventListener('click', function() {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/login';
+            });
+        });
+    </script>
+</body>
+</html>

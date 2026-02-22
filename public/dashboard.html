@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Personal Finance Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>💰 Personal Finance Tracker</h1>
+                <div class="user-info">
+                    <span id="userName">Loading...</span>
+                    <button id="logoutBtn" class="btn-logout">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <nav class="dashboard-nav">
+            <button class="nav-btn active" data-section="overview">📊 Overview</button>
+            <button class="nav-btn" data-section="expenses">💸 Expenses</button>
+            <button class="nav-btn" data-section="income">💵 Income</button>
+            <button class="nav-btn" data-section="budgets">📋 Budgets</button>
+            <button class="nav-btn" data-section="transactions">📜 Transactions</button>
+            <button class="nav-btn" data-section="insights">🤖 Insights</button>
+        </nav>
+
+        <main class="dashboard-main">
+            <section id="overview" class="content-section active">
+                <div class="month-selector">
+                    <label for="monthSelect">Month:</label>
+                    <input type="month" id="monthSelect">
+                </div>
+
+                <div class="summary-cards">
+                    <div class="card income-card">
+                        <h3>Total Income</h3>
+                        <div class="amount" id="totalIncome">₹0.00</div>
+                    </div>
+                    <div class="card expense-card">
+                        <h3>Total Expenses</h3>
+                        <div class="amount" id="totalExpenses">₹0.00</div>
+                    </div>
+                    <div class="card balance-card">
+                        <h3>Balance</h3>
+                        <div class="amount" id="balance">₹0.00</div>
+                    </div>
+                </div>
+
+                <div class="recent-transactions">
+                    <div class="transaction-section">
+                        <h3>Recent Expenses</h3>
+                        <div id="recentExpenses" class="transaction-list"></div>
+                    </div>
+                    <div class="transaction-section">
+                        <h3>Recent Income</h3>
+                        <div id="recentIncome" class="transaction-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="insights" class="content-section">
+                <div class="section-header">
+                    <h2>🤖 AI Expense Insights</h2>
+                    <button class="btn-secondary" id="refreshInsights">🔄 Refresh</button>
+                </div>
+                
+                <!-- Financial Health Score -->
+                <div class="health-score-container">
+                    <div class="health-score-card">
+                        <div class="health-score-header">
+                            <h3>⭐ Financial Health Score</h3>
+                            <div class="health-score-value" id="healthScoreValue">--/100</div>
+                        </div>
+                        <div class="health-score-rating" id="healthScoreRating">Calculating...</div>
+                        <div class="health-score-factors" id="healthScoreFactors">
+                            <div class="factor-item">📊 Analyzing your financial patterns...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="insightsContainer" class="insights-container">
+                    <div class="loading-insights">
+                        <div class="spinner"></div>
+                        <p>Analyzing your spending patterns...</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="expenses" class="content-section">
+                <div class="section-header">
+                    <h2>💸 Expenses</h2>
+                    <button class="btn-primary" id="addExpenseBtn">+ Add Expense</button>
+                </div>
+                <div id="expensesList" class="data-list"></div>
+            </section>
+
+            <section id="income" class="content-section">
+                <div class="section-header">
+                    <h2>💵 Income</h2>
+                    <button class="btn-primary" id="addIncomeBtn">+ Add Income</button>
+                </div>
+                <div id="incomeList" class="data-list"></div>
+            </section>
+
+            <section id="budgets" class="content-section">
+                <div class="section-header">
+                    <h2>📋 Budgets</h2>
+                    <button class="btn-primary" id="addBudgetBtn">+ Set Budget</button>
+                </div>
+                <div id="budgetsList" class="budget-list"></div>
+            </section>
+
+            <section id="transactions" class="content-section">
+                <div class="section-header">
+                    <h2>📜 Transaction History</h2>
+                    <button class="btn-secondary" id="exportBtn">📥 Export</button>
+                </div>
+                
+                <div class="transaction-filters">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="transactionSearch">Search:</label>
+                            <input type="text" id="transactionSearch" placeholder="Search description...">
+                        </div>
+                        <div class="filter-group">
+                            <label for="dateFrom">From Date:</label>
+                            <input type="date" id="dateFrom">
+                        </div>
+                        <div class="filter-group">
+                            <label for="dateTo">To Date:</label>
+                            <input type="date" id="dateTo">
+                        </div>
+                        <div class="filter-group">
+                            <button class="btn-primary" id="applyFilters">Apply Filters</button>
+                            <button class="btn-secondary" id="clearFilters">Clear</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="transaction-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Records:</span>
+                        <span class="stat-value" id="totalRecords">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Amount:</span>
+                        <span class="stat-value" id="totalAmount">₹0.00</span>
+                    </div>
+                </div>
+
+                <div class="transactions-container">
+                    <div id="transactionsList" class="transactions-list"></div>
+                </div>
+
+                <div class="pagination">
+                    <button class="btn-secondary" id="prevPage">← Previous</button>
+                    <span class="page-info" id="pageInfo">Page 1 of 1</span>
+                    <button class="btn-secondary" id="nextPage">Next →</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="expenseModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add Expense</h3>
+            <form id="expenseForm">
+                <div class="form-group">
+                    <label for="expenseCategory">Category</label>
+                    <select id="expenseCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="Food">🍔 Food</option>
+                        <option value="Transport">🚗 Transport</option>
+                        <option value="Entertainment">🎬 Entertainment</option>
+                        <option value="Shopping">🛍️ Shopping</option>
+                        <option value="Bills">📄 Bills</option>
+                        <option value="Healthcare">🏥 Healthcare</option>
+                        <option value="Other">📦 Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="expenseAmount">Amount</label>
+                    <input type="number" id="expenseAmount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="expenseDescription">Description</label>
+                    <input type="text" id="expenseDescription">
+                </div>
+                <div class="form-group">
+                    <label for="expenseDate">Date</label>
+                    <input type="date" id="expenseDate" required>
+                </div>
+                <button type="submit" class="btn-primary">Add Expense</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="incomeModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add Income</h3>
+            <form id="incomeForm">
+                <div class="form-group">
+                    <label for="incomeSource">Source</label>
+                    <select id="incomeSource" required>
+                        <option value="">Select Source</option>
+                        <option value="Salary">💼 Salary</option>
+                        <option value="Freelance">💻 Freelance</option>
+                        <option value="Business">🏢 Business</option>
+                        <option value="Investment">📈 Investment</option>
+                        <option value="Other">💰 Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="incomeAmount">Amount</label>
+                    <input type="number" id="incomeAmount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="incomeDescription">Description</label>
+                    <input type="text" id="incomeDescription">
+                </div>
+                <div class="form-group">
+                    <label for="incomeDate">Date</label>
+                    <input type="date" id="incomeDate" required>
+                </div>
+                <button type="submit" class="btn-primary">Add Income</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="budgetModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Set Budget</h3>
+            <form id="budgetForm">
+                <div class="form-group">
+                    <label for="budgetCategory">Category</label>
+                    <select id="budgetCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="Food">🍔 Food</option>
+                        <option value="Transport">🚗 Transport</option>
+                        <option value="Entertainment">🎬 Entertainment</option>
+                        <option value="Shopping">🛍️ Shopping</option>
+                        <option value="Bills">📄 Bills</option>
+                        <option value="Healthcare">🏥 Healthcare</option>
+                        <option value="Other">📦 Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="budgetAmount">Budget Amount</label>
+                    <input type="number" id="budgetAmount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="budgetMonth">Month</label>
+                    <input type="month" id="budgetMonth" required>
+                </div>
+                <button type="submit" class="btn-primary">Set Budget</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="message" class="message"></div>
+    <script src="dashboard.js"></script>
+</body>
+</html>
